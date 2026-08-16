@@ -7,10 +7,13 @@
     "dev:web": "next dev",
     "build": "next build",
     "start": "next start",
-    "render": "remotion render EKPromo out/ek-promo.mp4 --codec h264 --crf 18"
+    "render": "remotion render EKPromo out/ek-promo.mp4 --codec h264 --crf 18",
+    "render:ar": "remotion render EKPromoAr out/ek-promo-ar.mp4 --codec h264 --crf 18",
+    "render:ku": "remotion render EKPromoKu out/ek-promo-ku.mp4 --codec h264 --crf 18"
   },
   "dependencies": {
     "@remotion/cli": "4.0.512",
+    "@remotion/fonts": "4.0.512",
     "@remotion/google-fonts": "4.0.512",
     "next": "^15.4.5",
     "react": "^19.1.0",

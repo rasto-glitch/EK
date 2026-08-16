@@ -8,12 +8,14 @@ import {
 } from "remotion";
 import { AccentLine } from "../components/AccentLine";
 import { Logo } from "../components/Logo";
-import { colors, fontFamily, SMOOTH, T } from "../theme";
+import { useLocale } from "../locales";
+import { colors, SMOOTH, T } from "../theme";
 
-// 2.5–6s — EK mark springs in with a soft glow, tagline underneath.
+// EK mark springs in with a soft glow, tagline underneath.
 export const BrandReveal: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const L = useLocale();
 
   const logoIn = spring({ frame: frame - 6, fps, config: SMOOTH });
   const glow = interpolate(frame, [6, 52], [0, 1], {
@@ -68,17 +70,18 @@ export const BrandReveal: React.FC = () => {
       <div
         style={{
           marginTop: 40,
-          fontFamily,
+          fontFamily: L.fontFamily,
           fontWeight: 300,
           fontSize: 46,
-          letterSpacing: "0.01em",
+          letterSpacing: L.rtl ? undefined : "0.01em",
           color: colors.textDim,
+          direction: L.rtl ? "rtl" : "ltr",
           opacity: tagIn,
           transform: `translateY(${(1 - tagIn) * 22}px)`,
         }}
       >
-        Websites &amp; apps,{" "}
-        <span style={{ fontWeight: 500, color: colors.text }}>built right.</span>
+        {L.copy.tagPre}{" "}
+        <span style={{ fontWeight: 500, color: colors.text }}>{L.copy.tagBold}</span>
       </div>
     </AbsoluteFill>
   );

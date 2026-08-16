@@ -7,12 +7,14 @@ import {
 } from "remotion";
 import { AccentLine } from "../components/AccentLine";
 import { Logo } from "../components/Logo";
-import { colors, fontFamily, SAFE, SMOOTH } from "../theme";
+import { useLocale } from "../locales";
+import { colors, SAFE, SMOOTH } from "../theme";
 
-// 17–20s — CTA with pulsing glow. Holds until the end (no exit).
+// Final scene — CTA with pulsing glow. Holds until the end (no exit).
 export const CTA: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const L = useLocale();
 
   const readyIn = spring({ frame: frame - 4, fps, config: SMOOTH });
   const lineIn = spring({ frame: frame - 20, fps, config: SMOOTH });
@@ -36,16 +38,18 @@ export const CTA: React.FC = () => {
     >
       <div
         style={{
-          fontFamily,
+          fontFamily: L.fontFamily,
           fontWeight: 800,
           fontSize: 96,
-          letterSpacing: "-0.03em",
+          letterSpacing: L.rtl ? undefined : "-0.03em",
+          lineHeight: L.rtl ? 1.4 : undefined,
           color: colors.text,
+          direction: L.rtl ? "rtl" : "ltr",
           opacity: readyIn,
           transform: `translateY(${(1 - readyIn) * 34}px) scale(${0.92 + readyIn * 0.08})`,
         }}
       >
-        Ready to start?
+        {L.copy.ctaHeading}
       </div>
 
       <AccentLine progress={lineIn} width={260} style={{ marginTop: 52 }} />
@@ -53,7 +57,7 @@ export const CTA: React.FC = () => {
       <div
         style={{
           marginTop: 56,
-          fontFamily,
+          fontFamily: L.fontFamily,
           fontWeight: 700,
           fontSize: 56,
           letterSpacing: "-0.01em",
@@ -63,12 +67,12 @@ export const CTA: React.FC = () => {
           textShadow: `0 0 ${18 + pulse * 26}px rgba(78,157,232,${0.35 + pulse * 0.35})`,
         }}
       >
-        contact@elkurdi.co
+        {L.copy.email}
       </div>
       <div
         style={{
           marginTop: 20,
-          fontFamily,
+          fontFamily: L.fontFamily,
           fontWeight: 300,
           fontSize: 40,
           letterSpacing: "0.06em",
@@ -77,7 +81,7 @@ export const CTA: React.FC = () => {
           transform: `translateY(${(1 - siteIn) * 20}px)`,
         }}
       >
-        elkurdi.co
+        {L.copy.site}
       </div>
 
       {/* small EK mark near the bottom, above the safe margin */}

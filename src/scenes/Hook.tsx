@@ -5,19 +5,21 @@ import {
   useVideoConfig,
 } from "remotion";
 import { AccentLine } from "../components/AccentLine";
-import { colors, fontFamily, SAFE, SMOOTH } from "../theme";
+import { useLocale } from "../locales";
+import { colors, SAFE, SMOOTH } from "../theme";
 
-const WORDS = ["Your", "business", "deserves", "a", "better", "website."];
 const STAGGER = 7; // frames between words
 const START = 8;
 
-// 0–2.5s — fast word-by-word hook, then a hard cut (no exit animation).
+// First scene — fast word-by-word hook, then a hard cut (no exit animation).
 export const Hook: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const L = useLocale();
+  const words = L.copy.hookWords;
 
   const lineProgress = spring({
-    frame: frame - (START + WORDS.length * STAGGER + 4),
+    frame: frame - (START + words.length * STAGGER + 4),
     fps,
     config: SMOOTH,
   });
@@ -26,7 +28,7 @@ export const Hook: React.FC = () => {
     <AbsoluteFill
       style={{
         justifyContent: "center",
-        alignItems: "flex-start",
+        alignItems: L.rtl ? "flex-end" : "flex-start",
         paddingLeft: SAFE.left,
         paddingRight: SAFE.right,
         paddingTop: SAFE.top,
@@ -35,18 +37,19 @@ export const Hook: React.FC = () => {
     >
       <div
         style={{
-          fontFamily,
+          fontFamily: L.fontFamily,
           fontWeight: 800,
           fontSize: 92,
-          lineHeight: 1.12,
-          letterSpacing: "-0.03em",
+          lineHeight: L.rtl ? 1.35 : 1.12,
+          letterSpacing: L.rtl ? undefined : "-0.03em",
           color: colors.text,
           display: "flex",
           flexWrap: "wrap",
           columnGap: "0.28em",
+          direction: L.rtl ? "rtl" : "ltr",
         }}
       >
-        {WORDS.map((word, i) => {
+        {words.map((word, i) => {
           const s = spring({
             frame: frame - (START + i * STAGGER),
             fps,
@@ -60,7 +63,7 @@ export const Hook: React.FC = () => {
                 display: "inline-block",
                 opacity: s,
                 transform: `translateY(${(1 - s) * 30}px) scale(${0.94 + s * 0.06})`,
-                color: word === "better" ? colors.accent : colors.text,
+                color: i === L.copy.hookAccentIndex ? colors.accent : colors.text,
               }}
             >
               {word}

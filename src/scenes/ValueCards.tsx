@@ -6,7 +6,8 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { colors, fontFamily, SAFE, SMOOTH, T, WIDTH } from "../theme";
+import { useLocale } from "../locales";
+import { colors, SAFE, SMOOTH, T } from "../theme";
 
 // ---------------------------------------------------------------------------
 // 6–13s — three value cards, one at a time. Each: mockup (built from divs),
@@ -362,33 +363,22 @@ const IconChip: React.FC<{ kind: "web" | "app" | "people" }> = ({ kind }) => (
   </div>
 );
 
-// --- Card data --------------------------------------------------------------
+// --- Card data (text comes from the active locale) --------------------------
 const CARDS = [
-  {
-    icon: "web" as const,
-    title: "Fast, modern websites",
-    sub: "Launch in weeks, not months.",
-    Mockup: BrowserMockup,
-  },
-  {
-    icon: "app" as const,
-    title: "iOS & Android apps",
-    sub: "One codebase, both stores.",
-    Mockup: PhoneMockup,
-  },
-  {
-    icon: "people" as const,
-    title: "Designed for your customers",
-    sub: "Simple, fast, easy to love.",
-    Mockup: ChatMockup,
-  },
+  { icon: "web" as const, Mockup: BrowserMockup },
+  { icon: "app" as const, Mockup: PhoneMockup },
+  { icon: "people" as const, Mockup: ChatMockup },
 ];
 
 const Card: React.FC<{ index: number }> = ({ index }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const local = frame - index * T.cardDur;
-  const { icon, title, sub, Mockup } = CARDS[index];
+  const { icon, Mockup } = CARDS[index];
+  const L = useLocale();
+  const { title, sub } = L.copy.cards[index];
+  // Mirror the swipe direction for RTL: cards travel left-to-right.
+  const m = L.rtl ? -1 : 1;
 
   // Everything in this card staggers off this helper.
   const st: Stagger = (delay, dur = 32) =>
@@ -410,7 +400,7 @@ const Card: React.FC<{ index: number }> = ({ index }) => {
 
   const isFirst = index === 0;
   const isLast = index === CARDS.length - 1;
-  const x = (isFirst ? 0 : (1 - enter) * 560) + (isLast ? 0 : -exitP * 560);
+  const x = ((isFirst ? 0 : (1 - enter) * 560) + (isLast ? 0 : -exitP * 560)) * m;
   const y = (isFirst ? (1 - enter) * 90 : 0) + (isLast ? -exitP * 26 : 0);
 
   if (local < 0 || local >= T.cardDur) return null;
@@ -437,6 +427,7 @@ const Card: React.FC<{ index: number }> = ({ index }) => {
           display: "flex",
           gap: 28,
           alignItems: "center",
+          direction: L.rtl ? "rtl" : "ltr",
           opacity: st(8),
           transform: `translateY(${(1 - st(8)) * 30}px)`,
         }}
@@ -445,12 +436,12 @@ const Card: React.FC<{ index: number }> = ({ index }) => {
         <div>
           <div
             style={{
-              fontFamily,
+              fontFamily: L.fontFamily,
               fontWeight: 700,
               fontSize: 58,
-              letterSpacing: "-0.025em",
+              letterSpacing: L.rtl ? undefined : "-0.025em",
               color: colors.text,
-              lineHeight: 1.1,
+              lineHeight: L.rtl ? 1.5 : 1.1,
             }}
           >
             {title}
@@ -458,7 +449,7 @@ const Card: React.FC<{ index: number }> = ({ index }) => {
           <div
             style={{
               marginTop: 12,
-              fontFamily,
+              fontFamily: L.fontFamily,
               fontWeight: 300,
               fontSize: 34,
               color: colors.textDim,
@@ -477,6 +468,7 @@ const Card: React.FC<{ index: number }> = ({ index }) => {
 const Dots: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const L = useLocale();
 
   const fadeIn = spring({ frame: frame - 12, fps, config: SMOOTH });
   const fadeOut = interpolate(frame, [T.cards.dur - 14, T.cards.dur - 2], [1, 0], {
@@ -500,6 +492,7 @@ const Dots: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         gap: 14,
+        direction: L.rtl ? "rtl" : "ltr",
         opacity: fadeIn * fadeOut,
       }}
     >

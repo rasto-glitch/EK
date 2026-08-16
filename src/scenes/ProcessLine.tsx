@@ -6,16 +6,18 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { colors, fontFamily, SAFE, SMOOTH, T, WIDTH } from "../theme";
+import { useLocale } from "../locales";
+import { colors, SAFE, SMOOTH, T, WIDTH } from "../theme";
 
-const STEPS = ["Design", "Build", "Launch"];
 const FILL_START = 26;
 const FILL_END = 112;
 
-// 13–17s — proof line + progress track with three checkpoints lighting up.
+// Proof line + progress track with three checkpoints lighting up.
+// In RTL the track fills right-to-left with the first step on the right.
 export const ProcessLine: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const L = useLocale();
 
   const headIn = spring({ frame: frame - 2, fps, config: SMOOTH });
   const trackIn = spring({ frame: frame - 12, fps, config: SMOOTH });
@@ -48,20 +50,21 @@ export const ProcessLine: React.FC = () => {
     >
       <div
         style={{
-          fontFamily,
+          fontFamily: L.fontFamily,
           fontWeight: 700,
           fontSize: 66,
-          lineHeight: 1.18,
-          letterSpacing: "-0.025em",
+          lineHeight: L.rtl ? 1.5 : 1.18,
+          letterSpacing: L.rtl ? undefined : "-0.025em",
           color: colors.text,
           textAlign: "center",
           maxWidth: 860,
+          direction: L.rtl ? "rtl" : "ltr",
           opacity: headIn,
           transform: `translateY(${(1 - headIn) * 30}px) scale(${0.94 + headIn * 0.06})`,
         }}
       >
-        From idea to launch —{" "}
-        <span style={{ color: colors.accent }}>one team, one price.</span>
+        {L.copy.processPre}{" "}
+        <span style={{ color: colors.accent }}>{L.copy.processAccent}</span>
       </div>
 
       {/* progress track */}
@@ -81,20 +84,25 @@ export const ProcessLine: React.FC = () => {
             background: "rgba(255,255,255,0.1)",
           }}
         >
-          {/* fill */}
+          {/* fill — anchored to the start side of the reading direction */}
           <div
             style={{
               position: "absolute",
-              inset: 0,
+              top: 0,
+              bottom: 0,
+              ...(L.rtl ? { right: 0 } : { left: 0 }),
               width: `${progress * 100}%`,
               borderRadius: 3,
-              background: `linear-gradient(90deg, ${colors.accentDeep}, ${colors.accent})`,
+              background: L.rtl
+                ? `linear-gradient(270deg, ${colors.accentDeep}, ${colors.accent})`
+                : `linear-gradient(90deg, ${colors.accentDeep}, ${colors.accent})`,
               boxShadow: `0 0 20px ${colors.accentGlow}`,
             }}
           />
           {/* checkpoints */}
-          {STEPS.map((label, i) => {
-            const at = i / (STEPS.length - 1);
+          {L.copy.steps.map((label, i) => {
+            const at = i / (L.copy.steps.length - 1);
+            const eff = L.rtl ? 1 - at : at; // visual position along the track
             const litFrame =
               FILL_START + (FILL_END - FILL_START) * (0.08 + at * 0.84);
             const lit = spring({
@@ -108,7 +116,7 @@ export const ProcessLine: React.FC = () => {
                 key={label}
                 style={{
                   position: "absolute",
-                  left: `${at * 100}%`,
+                  left: `${eff * 100}%`,
                   top: "50%",
                   transform: "translate(-50%, -50%)",
                 }}
@@ -144,7 +152,7 @@ export const ProcessLine: React.FC = () => {
                     top: 54,
                     left: "50%",
                     transform: "translateX(-50%)",
-                    fontFamily,
+                    fontFamily: L.fontFamily,
                     fontWeight: 500,
                     fontSize: 32,
                     color: lit > 0.3 ? colors.text : colors.textDim,
