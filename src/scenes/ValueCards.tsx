@@ -394,12 +394,24 @@ const Card: React.FC<{ index: number }> = ({ index }) => {
   const st: Stagger = (delay, dur = 32) =>
     spring({ frame: local - delay, fps, config: SMOOTH, durationInFrames: dur });
 
-  const slideUp = spring({ frame: local, fps, config: SMOOTH, durationInFrames: 38 });
-  const exit = interpolate(local, [T.cardDur - 12, T.cardDur - 2], [1, 0], {
+  // Tab-like motion: first card rises in with the scene; the others swipe in
+  // from the right. Cards leave to the left; the last one just fades out.
+  const enter = spring({
+    frame: local,
+    fps,
+    config: SMOOTH,
+    durationInFrames: index === 0 ? 38 : 34,
+  });
+  const exitP = interpolate(local, [T.cardDur - 16, T.cardDur - 2], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
-    easing: Easing.out(Easing.cubic),
+    easing: Easing.in(Easing.cubic),
   });
+
+  const isFirst = index === 0;
+  const isLast = index === CARDS.length - 1;
+  const x = (isFirst ? 0 : (1 - enter) * 560) + (isLast ? 0 : -exitP * 560);
+  const y = (isFirst ? (1 - enter) * 90 : 0) + (isLast ? -exitP * 26 : 0);
 
   if (local < 0 || local >= T.cardDur) return null;
 
@@ -412,8 +424,8 @@ const Card: React.FC<{ index: number }> = ({ index }) => {
         paddingBottom: SAFE.bottom - 40,
         paddingLeft: SAFE.left,
         paddingRight: SAFE.right,
-        opacity: Math.min(slideUp * 1.4, 1) * exit,
-        transform: `translateY(${(1 - slideUp) * 90 - (1 - exit) * 34}px)`,
+        opacity: Math.min(enter * 1.4, 1) * (1 - exitP),
+        transform: `translate(${x}px, ${y}px)`,
       }}
     >
       <Mockup st={st} />
@@ -456,21 +468,69 @@ const Card: React.FC<{ index: number }> = ({ index }) => {
           </div>
         </div>
       </div>
-      {/* progress dots */}
-      <div style={{ display: "flex", gap: 14, marginTop: 60 }}>
-        {[0, 1, 2].map((i) => (
+    </AbsoluteFill>
+  );
+};
+
+// Persistent tab indicator: stays on screen for the whole scene; the active
+// pill glides from dot to dot as each card swipes past.
+const Dots: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const fadeIn = spring({ frame: frame - 12, fps, config: SMOOTH });
+  const fadeOut = interpolate(frame, [T.cards.dur - 14, T.cards.dur - 2], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
+
+  // 0 → 1 → 2 as the cards change, springing between positions.
+  const pos =
+    spring({ frame: frame - T.cardDur, fps, config: SMOOTH, durationInFrames: 34 }) +
+    spring({ frame: frame - 2 * T.cardDur, fps, config: SMOOTH, durationInFrames: 34 });
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        bottom: SAFE.bottom + 200,
+        left: 0,
+        right: 0,
+        display: "flex",
+        justifyContent: "center",
+        gap: 14,
+        opacity: fadeIn * fadeOut,
+      }}
+    >
+      {[0, 1, 2].map((i) => {
+        const proximity = Math.max(0, 1 - Math.abs(pos - i));
+        return (
           <div
             key={i}
             style={{
-              width: i === index ? 34 : 12,
+              position: "relative",
+              width: 12 + 22 * proximity,
               height: 12,
               borderRadius: 6,
-              background: i === index ? colors.accent : "rgba(255,255,255,0.18)",
+              background: "rgba(255,255,255,0.18)",
+              overflow: "hidden",
             }}
-          />
-        ))}
-      </div>
-    </AbsoluteFill>
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: 6,
+                background: colors.accent,
+                boxShadow: `0 0 12px ${colors.accentGlow}`,
+                opacity: proximity,
+              }}
+            />
+          </div>
+        );
+      })}
+    </div>
   );
 };
 
@@ -480,6 +540,7 @@ export const ValueCards: React.FC = () => {
       <Card index={0} />
       <Card index={1} />
       <Card index={2} />
+      <Dots />
     </AbsoluteFill>
   );
 };
