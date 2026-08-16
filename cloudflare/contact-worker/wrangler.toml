@@ -1,0 +1,23 @@
+# Cloudflare Worker that delivers EK contact-form submissions.
+#
+# Uses Email Routing's send-email binding (free, all plans): the Worker can
+# send email to any VERIFIED destination address on the Cloudflare account
+# (the Gmail address confirmed in Email Routing → Destination addresses).
+#
+# The Next.js site POSTs JSON here from /api/contact (server-to-server).
+# Optional shared secret: `wrangler secret put CONTACT_SECRET`, then set the
+# same value as CONTACT_WORKER_SECRET on the site.
+
+name = "ek-contact-worker"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[send_email]]
+name = "CONTACT_EMAIL"
+
+[vars]
+# Must be a VERIFIED destination address in Cloudflare Email Routing.
+CONTACT_TO = "rasto.elkurdi@gmail.com"
+# Must be on a zone with Email Routing enabled (elkurdi.co).
+CONTACT_FROM = "noreply@elkurdi.co"

@@ -1,20 +1,10 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
 
-const CONTACT_TO = process.env.CONTACT_TO || "contact@elkurdi.co";
-// Resend only requires the SENDER domain to be verified. elkurdi.co is not on
-// the Resend account (plan limit — scholify.krd occupies the free slot), so we
-// send from scholify.krd; contact@elkurdi.co receives via Cloudflare Email
-// Routing → Gmail forward.
-const CONTACT_FROM = process.env.CONTACT_FROM || "EK Website <noreply@scholify.krd>";
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+// Delivery is handled by a Cloudflare Worker (cloudflare/contact-worker) that
+// uses Email Routing's send-email binding to deliver to the verified Gmail
+// destination address. No Resend involved. This route just validates and
+// forwards server-to-server, so the Worker URL never reaches the browser.
+const CONTACT_TO = "contact@elkurdi.co";
 
 export async function POST(req: Request) {
   let body: Record<string, unknown>;
@@ -44,43 +34,35 @@ export async function POST(req: Request) {
     );
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("contact form: RESEND_API_KEY is not set — cannot deliver message");
+  const workerUrl = process.env.CONTACT_WORKER_URL;
+  if (!workerUrl) {
+    console.error("contact form: CONTACT_WORKER_URL is not set — cannot deliver message");
     return NextResponse.json(
       { ok: false, error: `Sending is temporarily unavailable — please email ${CONTACT_TO} directly.` },
       { status: 503 }
     );
   }
 
-  const html = `
-    <h2>New project inquiry — EK website</h2>
-    <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-    <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-    <p><strong>Project type:</strong> ${escapeHtml(projectType || "Not specified")}</p>
-    <p><strong>Message:</strong></p>
-    <p style="white-space:pre-wrap">${escapeHtml(message)}</p>
-  `;
-
   try {
-    const resend = new Resend(apiKey);
-    const { error } = await resend.emails.send({
-      from: CONTACT_FROM,
-      to: [CONTACT_TO],
-      replyTo: email,
-      subject: `EK inquiry from ${name} — ${projectType || "General"}`,
-      html,
-      text: `New project inquiry\n\nName: ${name}\nEmail: ${email}\nProject type: ${projectType || "Not specified"}\n\n${message}`,
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (process.env.CONTACT_WORKER_SECRET) {
+      headers["x-contact-secret"] = process.env.CONTACT_WORKER_SECRET;
+    }
+    const res = await fetch(workerUrl, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ name, email, projectType, message }),
     });
-    if (error) {
-      console.error("contact form: Resend error", error);
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      console.error("contact form: worker responded", res.status, detail);
       return NextResponse.json(
         { ok: false, error: `Could not send your message — please email ${CONTACT_TO} directly.` },
         { status: 502 }
       );
     }
   } catch (err) {
-    console.error("contact form: send failed", err);
+    console.error("contact form: worker fetch failed", err);
     return NextResponse.json(
       { ok: false, error: `Could not send your message — please email ${CONTACT_TO} directly.` },
       { status: 502 }
