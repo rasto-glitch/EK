@@ -1,6 +1,8 @@
 node_modules/
 .next/
 out/
+# unused Remotion starter scaffold (real video lives in src/)
+Remotion/
 .env
 .env.local
 .env*.local

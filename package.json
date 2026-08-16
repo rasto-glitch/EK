@@ -3,14 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "remotion studio",
+    "dev:web": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "render": "remotion render EKPromo out/ek-promo.mp4 --codec h264 --crf 18"
   },
   "dependencies": {
+    "@remotion/cli": "4.0.512",
+    "@remotion/google-fonts": "4.0.512",
     "next": "^15.4.5",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "remotion": "4.0.512"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
