@@ -391,10 +391,10 @@ const Card: React.FC<{ index: number }> = ({ index }) => {
   const { icon, title, sub, Mockup } = CARDS[index];
 
   // Everything in this card staggers off this helper.
-  const st: Stagger = (delay, dur = 26) =>
+  const st: Stagger = (delay, dur = 32) =>
     spring({ frame: local - delay, fps, config: SMOOTH, durationInFrames: dur });
 
-  const slideUp = spring({ frame: local, fps, config: SMOOTH, durationInFrames: 30 });
+  const slideUp = spring({ frame: local, fps, config: SMOOTH, durationInFrames: 38 });
   const exit = interpolate(local, [T.cardDur - 12, T.cardDur - 2], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",

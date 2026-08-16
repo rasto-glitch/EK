@@ -14,14 +14,14 @@ export const CTA: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const readyIn = spring({ frame: frame - 3, fps, config: SMOOTH });
-  const lineIn = spring({ frame: frame - 16, fps, config: SMOOTH });
-  const emailIn = spring({ frame: frame - 24, fps, config: SMOOTH });
-  const siteIn = spring({ frame: frame - 32, fps, config: SMOOTH });
-  const markIn = spring({ frame: frame - 42, fps, config: SMOOTH });
+  const readyIn = spring({ frame: frame - 4, fps, config: SMOOTH });
+  const lineIn = spring({ frame: frame - 20, fps, config: SMOOTH });
+  const emailIn = spring({ frame: frame - 30, fps, config: SMOOTH });
+  const siteIn = spring({ frame: frame - 40, fps, config: SMOOTH });
+  const markIn = spring({ frame: frame - 52, fps, config: SMOOTH });
 
   // gentle breathing glow, frame-driven
-  const pulse = 0.55 + 0.45 * Math.sin(frame / 9);
+  const pulse = 0.55 + 0.45 * Math.sin(frame / 11);
 
   return (
     <AbsoluteFill

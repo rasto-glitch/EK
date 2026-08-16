@@ -32,16 +32,16 @@ export const HEIGHT = 1920;
 export const FPS = 30;
 
 // ---------------------------------------------------------------------------
-// Scene timings (frames @ 30fps, 600 total = 20s). Tweak here only.
+// Scene timings (frames @ 30fps, 750 total = 25s). Tweak here only.
 // ---------------------------------------------------------------------------
 export const T = {
-  hook: { from: 0, dur: 75 }, //   0.0 – 2.5s
-  brand: { from: 75, dur: 105 }, // 2.5 – 6.0s
-  cards: { from: 180, dur: 210 }, // 6.0 – 13.0s  (3 × 70 frames)
-  cardDur: 70,
-  process: { from: 390, dur: 120 }, // 13.0 – 17.0s
-  cta: { from: 510, dur: 90 }, //  17.0 – 20.0s
-  total: 600,
+  hook: { from: 0, dur: 90 }, //   0.0 – 3.0s
+  brand: { from: 90, dur: 135 }, // 3.0 – 7.5s
+  cards: { from: 225, dur: 285 }, // 7.5 – 17.0s  (3 × 95 frames)
+  cardDur: 95,
+  process: { from: 510, dur: 140 }, // 17.0 – 21.7s
+  cta: { from: 650, dur: 100 }, //  21.7 – 25.0s
+  total: 750,
 };
 
 // Non-bouncy, "expensive" spring. Use everywhere.

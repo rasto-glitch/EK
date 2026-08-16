@@ -15,14 +15,14 @@ export const BrandReveal: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const logoIn = spring({ frame: frame - 4, fps, config: SMOOTH });
-  const glow = interpolate(frame, [4, 40], [0, 1], {
+  const logoIn = spring({ frame: frame - 6, fps, config: SMOOTH });
+  const glow = interpolate(frame, [6, 52], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
-  const lineIn = spring({ frame: frame - 26, fps, config: SMOOTH });
-  const tagIn = spring({ frame: frame - 34, fps, config: SMOOTH });
+  const lineIn = spring({ frame: frame - 34, fps, config: SMOOTH });
+  const tagIn = spring({ frame: frame - 46, fps, config: SMOOTH });
 
   // Soft ease-out exit at the end of the scene.
   const exit = interpolate(frame, [T.brand.dur - 14, T.brand.dur - 2], [1, 0], {

@@ -8,8 +8,8 @@ import { AccentLine } from "../components/AccentLine";
 import { colors, fontFamily, SAFE, SMOOTH } from "../theme";
 
 const WORDS = ["Your", "business", "deserves", "a", "better", "website."];
-const STAGGER = 5; // frames between words
-const START = 6;
+const STAGGER = 7; // frames between words
+const START = 8;
 
 // 0–2.5s — fast word-by-word hook, then a hard cut (no exit animation).
 export const Hook: React.FC = () => {
@@ -51,7 +51,7 @@ export const Hook: React.FC = () => {
             frame: frame - (START + i * STAGGER),
             fps,
             config: SMOOTH,
-            durationInFrames: 22,
+            durationInFrames: 26,
           });
           return (
             <span

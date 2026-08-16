@@ -9,8 +9,8 @@ import {
 import { colors, fontFamily, SAFE, SMOOTH, T, WIDTH } from "../theme";
 
 const STEPS = ["Design", "Build", "Launch"];
-const FILL_START = 22;
-const FILL_END = 92;
+const FILL_START = 26;
+const FILL_END = 112;
 
 // 13–17s — proof line + progress track with three checkpoints lighting up.
 export const ProcessLine: React.FC = () => {
