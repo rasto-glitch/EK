@@ -23,13 +23,16 @@ friendly "email us directly" error instead of sending.
 
 ## Environment variables
 
-| Variable         | Required | Default                          |
-| ---------------- | -------- | -------------------------------- |
-| `RESEND_API_KEY` | yes      | —                                |
-| `CONTACT_TO`     | no       | `contact@elkurdi.co`             |
-| `CONTACT_FROM`   | no       | `EK Website <noreply@elkurdi.co>` |
+| Variable         | Required | Default                             |
+| ---------------- | -------- | ----------------------------------- |
+| `RESEND_API_KEY` | yes      | —                                   |
+| `CONTACT_TO`     | no       | `contact@elkurdi.co`                |
+| `CONTACT_FROM`   | no       | `EK Website <noreply@scholify.krd>` |
 
-`CONTACT_FROM` must use a domain verified in Resend (elkurdi.co already is).
+`CONTACT_FROM` must use a domain verified in Resend. That is **scholify.krd**
+— elkurdi.co is not on the Resend account (plan limit). Inbound mail to
+`contact@elkurdi.co` is handled separately by Cloudflare Email Routing, which
+forwards it to Gmail.
 
 ## Deploy (Vercel)
 

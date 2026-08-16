@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
 const CONTACT_TO = process.env.CONTACT_TO || "contact@elkurdi.co";
-const CONTACT_FROM = process.env.CONTACT_FROM || "EK Website <noreply@elkurdi.co>";
+// Resend only requires the SENDER domain to be verified. elkurdi.co is not on
+// the Resend account (plan limit — scholify.krd occupies the free slot), so we
+// send from scholify.krd; contact@elkurdi.co receives via Cloudflare Email
+// Routing → Gmail forward.
+const CONTACT_FROM = process.env.CONTACT_FROM || "EK Website <noreply@scholify.krd>";
 
 function escapeHtml(s: string): string {
   return s
