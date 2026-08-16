@@ -1,4 +1,5 @@
 import ContactForm from "./contact-form";
+import EkMark from "./ek-mark";
 
 const services = [
   {
@@ -58,9 +59,7 @@ export default function Home() {
       <header className="sticky top-0 z-20 border-b border-line/60 bg-ink/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
           <a href="#" className="flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center rounded-lg bg-accent font-bold text-ink">
-              EK
-            </span>
+            <EkMark className="h-9 w-9 text-accent" />
             <span className="text-sm font-semibold tracking-widest text-snow uppercase">
               El Kurdi
             </span>
@@ -88,6 +87,7 @@ export default function Home() {
           aria-hidden
           className="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[720px] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"
         />
+        <EkMark className="pointer-events-none absolute top-1/2 -right-20 hidden h-96 w-96 -translate-y-1/2 text-accent/[0.06] lg:block" />
         <div className="mx-auto max-w-6xl px-5 pt-24 pb-20 text-center sm:pt-32 sm:pb-28">
           <p className="mb-5 inline-block rounded-full border border-line px-4 py-1.5 text-xs tracking-widest text-mist uppercase">
             Web &amp; mobile app development
@@ -187,7 +187,10 @@ export default function Home() {
 
       <footer className="border-t border-line/60">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-sm text-mist sm:flex-row">
-          <p>© {new Date().getFullYear()} EK — El Kurdi. All rights reserved.</p>
+          <p className="flex items-center gap-2">
+            <EkMark className="h-5 w-5 text-mist" />© {new Date().getFullYear()} EK
+            — El Kurdi. All rights reserved.
+          </p>
           <a href="mailto:contact@elkurdi.co" className="hover:text-snow">
             contact@elkurdi.co
           </a>
