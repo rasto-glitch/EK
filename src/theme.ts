@@ -41,8 +41,8 @@ export const T = {
   cardDur: 95,
   process: { from: 510, dur: 140 }, // 17.0 – 21.7s
   cta: { from: 650, dur: 100 }, //  21.7 – 25.0s
-  coded: { from: 750, dur: 105 }, // 25.0 – 28.5s  "we coded this video" closer
-  total: 855,
+  coded: { from: 750, dur: 165 }, // 25.0 – 30.5s  "we coded this video" closer
+  total: 915,
 };
 
 // Non-bouncy, "expensive" spring. Use everywhere.

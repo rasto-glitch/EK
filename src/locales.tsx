@@ -92,8 +92,8 @@ export const KU: Locale = {
   copy: {
     hookWords: ["بزنسەکەت", "شایانی", "ماڵپەڕێکی", "باشترە."],
     hookAccentIndex: 3,
-    tagPre: "ماڵپەڕ و ئەپ،",
-    tagBold: "بە باشی دروستکراون.",
+    tagPre: "ماڵپەڕ و ئاپ،",
+    tagBold: "باشتر دروست دەکرێن.",
     cards: [
       { title: "ماڵپەڕی خێرا و مۆدێرن", sub: "بە هەفتە ئامادە دەبێت، نەک بە مانگ." },
       { title: "ئەپی iOS و Android", sub: "یەک کۆد، بۆ هەردوو ستۆر." },
