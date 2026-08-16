@@ -21,6 +21,8 @@ export type PromoCopy = {
   processPre: string;
   processAccent: string;
   steps: [string, string, string];
+  codedLine1: string;
+  codedLine2: string;
   ctaHeading: string;
   email: string;
   site: string;
@@ -50,6 +52,8 @@ export const EN: Locale = {
     processPre: "From idea to launch —",
     processAccent: "one team, one price.",
     steps: ["Design", "Build", "Launch"],
+    codedLine1: "We coded this video.",
+    codedLine2: "We can code your website.",
     ctaHeading: "Ready to start?",
     email: "contact@elkurdi.co",
     site: "elkurdi.co",
@@ -73,6 +77,8 @@ export const AR: Locale = {
     processPre: "من الفكرة إلى الإطلاق —",
     processAccent: "فريق واحد، سعر واحد.",
     steps: ["التصميم", "التطوير", "الإطلاق"],
+    codedLine1: "برمجنا هذا الفيديو.",
+    codedLine2: "ونستطيع برمجة موقعك.",
     ctaHeading: "مستعد للبدء؟",
     email: "contact@elkurdi.co",
     site: "elkurdi.co",
@@ -96,6 +102,8 @@ export const KU: Locale = {
     processPre: "لە بیرۆکەوە تا بڵاوکردنەوە —",
     processAccent: "یەک تیم، یەک نرخ.",
     steps: ["دیزاین", "دروستکردن", "بڵاوکردنەوە"],
+    codedLine1: "ئەم ڤیدیۆیە بە کۆد دروستکراوە.",
+    codedLine2: "ماڵپەڕەکەت ئاسانە.",
     ctaHeading: "ئامادەیت دەست پێبکەیت؟",
     email: "contact@elkurdi.co",
     site: "elkurdi.co",

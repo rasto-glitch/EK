@@ -4,6 +4,7 @@ import { Grain } from "./components/Grain";
 import { Music } from "./components/Music";
 import { AR, EN, KU, LocaleProvider } from "./locales";
 import { BrandReveal } from "./scenes/BrandReveal";
+import { CodedThis } from "./scenes/CodedThis";
 import { CTA } from "./scenes/CTA";
 import { Hook } from "./scenes/Hook";
 import { ProcessLine } from "./scenes/ProcessLine";
@@ -34,6 +35,9 @@ export const EKPromo: React.FC<EKPromoProps> = ({ locale = "en" }) => {
         </Sequence>
         <Sequence from={T.cta.from} durationInFrames={T.cta.dur} name="CTA">
           <CTA />
+        </Sequence>
+        <Sequence from={T.coded.from} durationInFrames={T.coded.dur} name="We coded this">
+          <CodedThis />
         </Sequence>
         <Grain />
         <Music />

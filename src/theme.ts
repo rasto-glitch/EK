@@ -32,7 +32,7 @@ export const HEIGHT = 1920;
 export const FPS = 30;
 
 // ---------------------------------------------------------------------------
-// Scene timings (frames @ 30fps, 750 total = 25s). Tweak here only.
+// Scene timings (frames @ 30fps, 855 total = 28.5s). Tweak here only.
 // ---------------------------------------------------------------------------
 export const T = {
   hook: { from: 0, dur: 90 }, //   0.0 – 3.0s
@@ -41,7 +41,8 @@ export const T = {
   cardDur: 95,
   process: { from: 510, dur: 140 }, // 17.0 – 21.7s
   cta: { from: 650, dur: 100 }, //  21.7 – 25.0s
-  total: 750,
+  coded: { from: 750, dur: 105 }, // 25.0 – 28.5s  "we coded this video" closer
+  total: 855,
 };
 
 // Non-bouncy, "expensive" spring. Use everywhere.

@@ -1,5 +1,6 @@
 import {
   AbsoluteFill,
+  Easing,
   interpolate,
   spring,
   useCurrentFrame,
@@ -8,9 +9,9 @@ import {
 import { AccentLine } from "../components/AccentLine";
 import { Logo } from "../components/Logo";
 import { useLocale } from "../locales";
-import { colors, SAFE, SMOOTH } from "../theme";
+import { colors, SAFE, SMOOTH, T } from "../theme";
 
-// Final scene — CTA with pulsing glow. Holds until the end (no exit).
+// CTA with pulsing glow; fades out softly into the closing beat.
 export const CTA: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -25,6 +26,12 @@ export const CTA: React.FC = () => {
   // gentle breathing glow, frame-driven
   const pulse = 0.55 + 0.45 * Math.sin(frame / 11);
 
+  const exit = interpolate(frame, [T.cta.dur - 14, T.cta.dur - 2], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
+
   return (
     <AbsoluteFill
       style={{
@@ -34,6 +41,7 @@ export const CTA: React.FC = () => {
         paddingRight: SAFE.right,
         paddingTop: SAFE.top,
         paddingBottom: SAFE.bottom,
+        opacity: exit,
       }}
     >
       <div
