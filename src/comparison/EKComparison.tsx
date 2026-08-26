@@ -3,15 +3,17 @@ import { Background } from "../components/Background";
 import { Grain } from "../components/Grain";
 import { colors } from "../theme";
 import { BadSite } from "./BadSite";
-import { CMP_AR, CMP_EN, CmpProvider } from "./copy";
+import { CMP_AR, CMP_EN, CMP_KU, CmpProvider } from "./copy";
 import { EndCard } from "./EndCard";
 import { GoodSite } from "./GoodSite";
 import { Rebuild } from "./Rebuild";
 import { CT } from "./timings";
 
 // Bad website vs. EK website — frustration acted out, never described.
-export const EKComparison: React.FC<{ locale?: "en" | "ar" }> = ({ locale = "en" }) => {
-  const c = locale === "ar" ? CMP_AR : CMP_EN;
+export const EKComparison: React.FC<{ locale?: "en" | "ar" | "ku" }> = ({
+  locale = "en",
+}) => {
+  const c = locale === "ar" ? CMP_AR : locale === "ku" ? CMP_KU : CMP_EN;
   return (
     <CmpProvider value={c}>
       <AbsoluteFill style={{ backgroundColor: colors.bg, fontFamily: c.fontFamily }}>

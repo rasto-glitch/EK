@@ -52,6 +52,15 @@ export const RemotionRoot: React.FC = () => {
         height={HEIGHT}
         defaultProps={{ locale: "ar" as const }}
       />
+      <Composition
+        id="EKComparisonKu"
+        component={EKComparison}
+        durationInFrames={CT.total}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{ locale: "ku" as const }}
+      />
     </>
   );
 };

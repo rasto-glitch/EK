@@ -11,7 +11,8 @@
     "render:ar": "remotion render EKPromoAr out/ek-promo-ar.mp4 --codec h264 --crf 18",
     "render:ku": "remotion render EKPromoKu out/ek-promo-ku.mp4 --codec h264 --crf 18",
     "render:compare": "remotion render EKComparison out/compare/ek-comparison.mp4 --codec h264 --crf 18",
-    "render:compare:ar": "remotion render EKComparisonAr out/compare/ek-comparison-ar.mp4 --codec h264 --crf 18"
+    "render:compare:ar": "remotion render EKComparisonAr out/compare/ek-comparison-ar.mp4 --codec h264 --crf 18",
+    "render:compare:ku": "remotion render EKComparisonKu out/compare/ek-comparison-ku.mp4 --codec h264 --crf 18"
   },
   "dependencies": {
     "@remotion/cli": "4.0.512",
