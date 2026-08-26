@@ -48,6 +48,7 @@ export const GoodSite: React.FC = () => {
   const { fps } = useVideoConfig();
 
   const chipIn = spring({ frame: frame - G.chipIn, fps, config: SMOOTH });
+  const frameIn = spring({ frame: frame - 2, fps, config: SMOOTH, durationInFrames: 26 });
 
   // Home assembles fast and confident
   const el = (delay: number) =>
@@ -148,7 +149,7 @@ export const GoodSite: React.FC = () => {
         </div>
       </div>
 
-      {/* browser frame */}
+      {/* browser frame — springs up after the title has cleared */}
       <div
         style={{
           position: "absolute",
@@ -160,6 +161,8 @@ export const GoodSite: React.FC = () => {
           overflow: "hidden",
           border: "1.5px solid rgba(78,157,232,0.28)",
           boxShadow: `0 0 60px rgba(78,157,232,0.14), 0 40px 90px rgba(0,0,0,0.55)`,
+          opacity: frameIn,
+          transform: `translateY(${(1 - frameIn) * 80}px) scale(${0.95 + frameIn * 0.05})`,
         }}
       >
         {/* chrome bar */}

@@ -30,13 +30,13 @@ export const Rebuild: React.FC = () => {
     easing: Easing.in(Easing.cubic),
   });
 
-  const rebuild = spring({
-    frame: frame - COLLAPSE_END,
-    fps,
-    config: SMOOTH,
-    durationInFrames: 30,
+  const titleIn = spring({ frame: frame - 42, fps, config: SMOOTH });
+  // clean exit before the scene ends — no hard cut into the good site
+  const titleOut = interpolate(frame, [62, 74], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
   });
-  const titleIn = spring({ frame: frame - 50, fps, config: SMOOTH });
 
   // deterministic pseudo-random slice offsets, re-rolled every 2 frames
   const sliceOffset = (i: number) =>
@@ -125,26 +125,7 @@ export const Rebuild: React.FC = () => {
         </div>
       )}
 
-      {/* new dark frame springs together */}
-      {frame >= COLLAPSE_END && (
-        <div
-          style={{
-            position: "absolute",
-            left: FRAME.left,
-            top: FRAME.top,
-            width: FRAME.width,
-            height: FRAME.height,
-            borderRadius: 24,
-            background: "#0E1116",
-            border: `1.5px solid rgba(78,157,232,0.35)`,
-            boxShadow: `0 0 60px rgba(78,157,232,${0.25 * rebuild}), 0 40px 90px rgba(0,0,0,0.55)`,
-            opacity: rebuild,
-            transform: `scale(${0.62 + rebuild * 0.38}) translateY(${(1 - rebuild) * 260}px)`,
-          }}
-        />
-      )}
-
-      {/* title */}
+      {/* title — its own clean beat on the empty background */}
       <div
         style={{
           position: "absolute",
@@ -155,8 +136,8 @@ export const Rebuild: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          opacity: titleIn,
-          transform: `translateY(${(1 - titleIn) * 30}px) scale(${0.92 + titleIn * 0.08})`,
+          opacity: titleIn * titleOut,
+          transform: `translateY(${(1 - titleIn) * 30 - (1 - titleOut) * 26}px) scale(${(0.92 + titleIn * 0.08) * (1 + (1 - titleOut) * 0.04)})`,
         }}
       >
         <div style={{ textAlign: "center" }}>
