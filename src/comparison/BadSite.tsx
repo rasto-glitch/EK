@@ -511,13 +511,13 @@ export const BadSite: React.FC = () => {
       </div>
 
       {/* click ripples */}
-      <Ripple x={MENU.x + 10} y={MENU.y + 10} clickFrame={B.adClick} frame={frame} />
-      <Ripple x={CONTACT.x + 10} y={CONTACT.y + 10} clickFrame={B.click1} frame={frame} />
-      <Ripple x={CONTACT.x + 10} y={CONTACT.y + 10} clickFrame={B.click2} frame={frame} />
-      <Ripple x={CONTACT.x + 10} y={CONTACT.y + 10} clickFrame={B.click3} frame={frame} />
-      <Ripple x={X_MISS.x + 10} y={X_MISS.y + 10} clickFrame={B.missClick} frame={frame} />
-      <Ripple x={X_HIT.x + 10} y={X_HIT.y + 10} clickFrame={B.hitClick} frame={frame} />
-      <Ripple x={LINK.x + 10} y={LINK.y + 10} clickFrame={B.linkClick} frame={frame} />
+      <Ripple x={MENU.x} y={MENU.y} clickFrame={B.adClick} frame={frame} />
+      <Ripple x={CONTACT.x} y={CONTACT.y} clickFrame={B.click1} frame={frame} />
+      <Ripple x={CONTACT.x} y={CONTACT.y} clickFrame={B.click2} frame={frame} />
+      <Ripple x={CONTACT.x} y={CONTACT.y} clickFrame={B.click3} frame={frame} />
+      <Ripple x={X_MISS.x} y={X_MISS.y} clickFrame={B.missClick} frame={frame} />
+      <Ripple x={X_HIT.x} y={X_HIT.y} clickFrame={B.hitClick} frame={frame} />
+      <Ripple x={LINK.x} y={LINK.y} clickFrame={B.linkClick} frame={frame} />
 
       {/* cursor */}
       {frame >= B.cursorIn && (

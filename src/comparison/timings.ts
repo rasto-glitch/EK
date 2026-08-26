@@ -8,8 +8,8 @@ export const CT = {
   bad: { from: 0, dur: 450 }, //      0 – 15s  "People's website"
   rebuild: { from: 450, dur: 75 }, // 15 – 17.5s glitch → reassembly
   good: { from: 525, dur: 225 }, //   17.5 – 25s "Your website"
-  end: { from: 750, dur: 150 }, //    25 – 30s  end card
-  total: 900,
+  end: { from: 750, dur: 300 }, //    25 – 35s  end card (long, unhurried close)
+  total: 1050,
 };
 
 // Scene 1 beats (local frames)
@@ -36,28 +36,28 @@ export const B = {
   cut404: 404, // hard cut, held to end of scene
 };
 
-// Scene 3 beats (local frames)
+// Scene 3 beats (local frames) — real tab navigation: each click swaps pages
 export const G = {
   chipIn: 4,
-  loadStart: 10, // everything springs in immediately — no waiting
-  hoverHome: 75,
-  hoverWork: 100,
-  hoverAbout: 115,
-  press: 140, // Contact press
-  checkDraw: 150,
-  scrollStart: 168,
+  loadStart: 10, // Home assembles immediately — no waiting
+  clickHome: 76,
+  clickWork: 104, // → Work page slides in
+  clickAbout: 134, // → About page (holds the Contact button)
+  press: 172, // Contact press on the About page
+  checkDraw: 182,
+  scrollStart: 196,
   scrollEnd: 222,
 };
 
-// Scene 4 beats (local frames)
+// Scene 4 beats (local frames, 300 total — the close takes its time)
 export const E = {
   headlineIn: 6,
   shrinkStart: 52,
   shrinkEnd: 68,
-  typeStart: 66,
-  typeEnd: 108,
-  logoIn: 100,
-  contactsIn: 112,
+  typeStart: 70,
+  typeEnd: 150, // slower, readable typing
+  logoIn: 160,
+  contactsIn: 185,
 };
 
 // Browser frame geometry (canvas px, shared by both sites)

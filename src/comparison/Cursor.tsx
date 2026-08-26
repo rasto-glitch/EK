@@ -13,8 +13,10 @@ export const Cursor: React.FC<{
       viewBox="0 0 32 44"
       style={{
         position: "absolute",
-        left: x,
-        top: y,
+        // Offset so the passed (x, y) is exactly the pointer TIP —
+        // clicks land visually on their targets.
+        left: x - 9,
+        top: y - 3,
         width: 46,
         height: 63,
         opacity,
