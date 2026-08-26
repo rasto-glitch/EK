@@ -1,4 +1,6 @@
 import { Composition } from "remotion";
+import { EKComparison } from "./comparison/EKComparison";
+import { CT } from "./comparison/timings";
 import { EKPromo } from "./EKPromo";
 import { FPS, HEIGHT, T, WIDTH } from "./theme";
 
@@ -31,6 +33,14 @@ export const RemotionRoot: React.FC = () => {
         width={WIDTH}
         height={HEIGHT}
         defaultProps={{ locale: "ku" as const }}
+      />
+      <Composition
+        id="EKComparison"
+        component={EKComparison}
+        durationInFrames={CT.total}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
       />
     </>
   );

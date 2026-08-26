@@ -1,0 +1,137 @@
+import {
+  AbsoluteFill,
+  Easing,
+  interpolate,
+  spring,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
+import { Logo } from "../components/Logo";
+import { colors, fontFamily, SAFE, SMOOTH } from "../theme";
+import { E } from "./timings";
+
+const TYPED = "We coded this video. We can code your website.";
+const MONO = '"Cascadia Code", Consolas, "Courier New", monospace';
+
+// 25–30s — headline, then the terminal-typed sign-off.
+export const EndCard: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+
+  const headlineIn = spring({ frame: frame - E.headlineIn, fps, config: SMOOTH });
+  const shrink = interpolate(frame, [E.shrinkStart, E.shrinkEnd], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.inOut(Easing.cubic),
+  });
+
+  const charCount = Math.round(
+    interpolate(frame, [E.typeStart, E.typeEnd], [0, TYPED.length], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    })
+  );
+  const typed = TYPED.slice(0, charCount);
+  const cursorOn = Math.floor(frame / 12) % 2 === 0;
+
+  const logoIn = spring({ frame: frame - E.logoIn, fps, config: SMOOTH });
+  const contactsIn = spring({ frame: frame - E.contactsIn, fps, config: SMOOTH });
+
+  return (
+    <AbsoluteFill
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        paddingLeft: SAFE.left,
+        paddingRight: SAFE.right,
+        paddingTop: SAFE.top,
+        paddingBottom: SAFE.bottom,
+      }}
+    >
+      {/* headline — large, then shrinks and slides up */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: SAFE.left,
+          right: SAFE.right,
+          textAlign: "center",
+          fontFamily,
+          fontWeight: 800,
+          fontSize: 82,
+          lineHeight: 1.18,
+          letterSpacing: "-0.03em",
+          color: colors.text,
+          opacity: headlineIn,
+          transform: `translateY(calc(-50% + ${(1 - headlineIn) * 36 - shrink * 470}px)) scale(${
+            (0.94 + headlineIn * 0.06) * (1 - shrink * 0.5)
+          })`,
+        }}
+      >
+        Yours doesn&apos;t have to be like theirs.
+      </div>
+
+      {/* terminal line */}
+      {frame >= E.typeStart - 4 && (
+        <div
+          style={{
+            marginTop: 40,
+            fontFamily: MONO,
+            fontWeight: 400,
+            fontSize: 33,
+            color: colors.textDim,
+            textAlign: "center",
+            maxWidth: 860,
+          }}
+        >
+          <span style={{ color: colors.accent }}>&gt; </span>
+          <span style={{ color: colors.text }}>{typed}</span>
+          <span
+            style={{
+              display: "inline-block",
+              width: 17,
+              height: 36,
+              marginLeft: 6,
+              verticalAlign: "middle",
+              background: colors.accent,
+              opacity: cursorOn ? 1 : 0,
+              boxShadow: `0 0 10px ${colors.accentGlow}`,
+            }}
+          />
+        </div>
+      )}
+
+      {/* logo */}
+      <div
+        style={{
+          marginTop: 84,
+          opacity: logoIn,
+          transform: `translateY(${(1 - logoIn) * 18}px) scale(${0.94 + logoIn * 0.06})`,
+        }}
+      >
+        <Logo size={140} />
+      </div>
+
+      {/* contacts */}
+      <div
+        style={{
+          marginTop: 56,
+          fontFamily,
+          fontWeight: 400,
+          fontSize: 33,
+          letterSpacing: "0.02em",
+          color: colors.textDim,
+          textAlign: "center",
+          opacity: contactsIn,
+          transform: `translateY(${(1 - contactsIn) * 16}px)`,
+        }}
+      >
+        +9647507972626
+        <span style={{ color: colors.accent, margin: "0 18px" }}>/</span>
+        contact@elkurdi.co
+        <span style={{ color: colors.accent, margin: "0 18px" }}>/</span>
+        elkurdi.co
+      </div>
+    </AbsoluteFill>
+  );
+};
