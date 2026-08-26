@@ -17,8 +17,6 @@ const MONO = '"Cascadia Code", Consolas, "Courier New", monospace';
 export const EndCard: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const c = useCmp();
-  const fontFamily = c.fontFamily;
 
   const headlineIn = spring({ frame: frame - E.headlineIn, fps, config: SMOOTH });
   const shrink = interpolate(frame, [E.shrinkStart, E.shrinkEnd], [0, 1], {
@@ -28,12 +26,12 @@ export const EndCard: React.FC = () => {
   });
 
   const charCount = Math.round(
-    interpolate(frame, [E.typeStart, E.typeEnd], [0, c.typed.length], {
+    interpolate(frame, [E.typeStart, E.typeEnd], [0, TYPED.length], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     })
   );
-  const typed = c.typed.slice(0, charCount);
+  const typed = TYPED.slice(0, charCount);
   const cursorOn = Math.floor(frame / 12) % 2 === 0;
 
   const logoIn = spring({ frame: frame - E.logoIn, fps, config: SMOOTH });
@@ -61,9 +59,8 @@ export const EndCard: React.FC = () => {
           fontFamily,
           fontWeight: 800,
           fontSize: 82,
-          lineHeight: c.rtl ? 1.45 : 1.18,
-          letterSpacing: c.rtl ? undefined : "-0.03em",
-          direction: c.rtl ? "rtl" : "ltr",
+          lineHeight: 1.18,
+          letterSpacing: "-0.03em",
           color: colors.text,
           opacity: headlineIn,
           transform: `translateY(calc(-50% + ${(1 - headlineIn) * 36 - shrink * 470}px)) scale(${
@@ -71,7 +68,7 @@ export const EndCard: React.FC = () => {
           })`,
         }}
       >
-        {c.headline}
+        Yours doesn&apos;t have to be like theirs.
       </div>
 
       {/* terminal line */}
@@ -79,14 +76,12 @@ export const EndCard: React.FC = () => {
         <div
           style={{
             marginTop: 40,
-            fontFamily: c.rtl ? c.fontFamily : MONO,
+            fontFamily: MONO,
             fontWeight: 400,
             fontSize: 33,
             color: colors.textDim,
             textAlign: "center",
             maxWidth: 860,
-            direction: c.rtl ? "rtl" : "ltr",
-            lineHeight: c.rtl ? 1.6 : undefined,
           }}
         >
           <span style={{ color: colors.accent }}>&gt; </span>

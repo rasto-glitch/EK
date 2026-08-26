@@ -7,6 +7,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { colors, fontFamily, SMOOTH } from "../theme";
+import { useCmp } from "./copy";
 import { FRAME } from "./timings";
 
 const GLITCH_END = 20;
@@ -18,6 +19,7 @@ const SLICES = 6;
 export const Rebuild: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const c = useCmp();
 
   const glitchIntensity =
     frame < GLITCH_END
@@ -143,15 +145,16 @@ export const Rebuild: React.FC = () => {
         <div style={{ textAlign: "center" }}>
           <div
             style={{
-              fontFamily,
+              fontFamily: c.fontFamily,
               fontWeight: 800,
               fontSize: 86,
-              letterSpacing: "-0.03em",
+              letterSpacing: c.rtl ? undefined : "-0.03em",
+              lineHeight: c.rtl ? 1.4 : undefined,
               color: colors.text,
               textShadow: `0 0 40px ${colors.accentGlow}`,
             }}
           >
-            Your website
+            {c.yourWebsite}
           </div>
           <div
             style={{

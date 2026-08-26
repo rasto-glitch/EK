@@ -6,7 +6,8 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { colors, fontFamily, SMOOTH } from "../theme";
+import { colors, SMOOTH } from "../theme";
+import { useCmp } from "./copy";
 import { Cursor, Ripple } from "./Cursor";
 import { clickPulse, cursorPath, FRAME, G, Waypoint } from "./timings";
 
@@ -46,6 +47,8 @@ const PATH: Waypoint[] = [
 export const GoodSite: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const c = useCmp();
+  const fontFamily = c.fontFamily;
 
   const chipIn = spring({ frame: frame - G.chipIn, fps, config: SMOOTH });
   const frameIn = spring({ frame: frame - 2, fps, config: SMOOTH, durationInFrames: 26 });
@@ -145,7 +148,7 @@ export const GoodSite: React.FC = () => {
               boxShadow: `0 0 10px ${colors.accentGlow}`,
             }}
           />
-          Your website
+          {c.yourWebsite}
         </div>
       </div>
 
@@ -244,8 +247,8 @@ export const GoodSite: React.FC = () => {
                 key={item.label}
                 style={{
                   position: "absolute",
-                  left: item.x - 50,
-                  width: 100,
+                  left: item.x - 65,
+                  width: 130,
                   textAlign: "center",
                   fontFamily,
                   fontWeight: 500,
@@ -254,7 +257,7 @@ export const GoodSite: React.FC = () => {
                   transform: `scale(${activeItem === i && underlineIn > 0.5 ? 1.06 : 1})`,
                 }}
               >
-                {item.label}
+                {c.navItems[i]}
               </div>
             ))}
             {/* glowing underline */}
@@ -335,9 +338,11 @@ export const GoodSite: React.FC = () => {
                 color: colors.text,
                 opacity: wl(0),
                 transform: `translateY(${(1 - wl(0)) * 20}px)`,
+                direction: c.rtl ? "rtl" : "ltr",
+                textAlign: c.rtl ? "right" : "left",
               }}
             >
-              Selected work
+              {c.selectedWork}
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 24, margin: "26px 40px 0" }}>
               {[0, 1, 2, 3].map((i) => (
@@ -428,12 +433,12 @@ export const GoodSite: React.FC = () => {
                     />
                   </svg>
                   <span style={{ fontFamily, fontWeight: 700, fontSize: 28, color: colors.text, opacity: check }}>
-                    Message sent
+                    {c.messageSent}
                   </span>
                 </>
               ) : (
                 <span style={{ fontFamily, fontWeight: 700, fontSize: 28, color: "#0B0F1A" }}>
-                  Contact us
+                  {c.contactUs}
                 </span>
               )}
             </div>

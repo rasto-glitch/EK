@@ -5,7 +5,8 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { colors, fontFamily, SMOOTH } from "../theme";
+import { colors, SMOOTH } from "../theme";
+import { useCmp } from "./copy";
 import { Cursor, Ripple } from "./Cursor";
 import { B, clickPulse, CONTENT_Y, cursorPath, FRAME, Waypoint } from "./timings";
 
@@ -20,25 +21,28 @@ const BAD = {
   adB: "#FF3D6E",
 };
 
-// Canvas-space click targets (see timings.ts for geometry)
+// Canvas-space click targets. Content sits below the injected ad (+100) after
+// B.adInject, and the hero image shift is already in place by then.
 const MENU = { x: 830, y: 384 }; // where Menu WAS before the ad shoved it down
-const CONTACT = { x: 290, y: 992 };
+const CONTACT = { x: 270, y: 1177 }; // dead Contact button center (post-ad layout)
 const X_MISS = { x: 806, y: 672 };
 const X_HIT = { x: 833, y: 648 };
-const LINK = { x: 235, y: 1130 };
 
-const PATH: Waypoint[] = [
-  { t: B.cursorIn + 4, x: 620, y: 1500 },
-  { t: B.adInject + 2, x: MENU.x, y: MENU.y + 4 },
-  { t: B.adClick + 8, x: MENU.x, y: MENU.y + 4 },
-  { t: B.click1 - 5, x: CONTACT.x, y: CONTACT.y },
-  { t: B.popupIn + 2, x: CONTACT.x, y: CONTACT.y },
-  { t: B.missClick - 4, x: X_MISS.x, y: X_MISS.y },
-  { t: B.missClick + 8, x: X_MISS.x, y: X_MISS.y },
-  { t: B.hitClick - 4, x: X_HIT.x, y: X_HIT.y },
-  { t: B.popupGone + 2, x: X_HIT.x, y: X_HIT.y },
-  { t: B.linkClick - 4, x: LINK.x, y: LINK.y },
-];
+const buildPath = (linkX: number): Waypoint[] => {
+  const LINK_Y = 1288;
+  return [
+    { t: B.cursorIn + 4, x: 620, y: 1500 },
+    { t: B.adInject + 2, x: MENU.x, y: MENU.y + 4 },
+    { t: B.adClick + 8, x: MENU.x, y: MENU.y + 4 },
+    { t: B.click1 - 5, x: CONTACT.x, y: CONTACT.y },
+    { t: B.popupIn + 2, x: CONTACT.x, y: CONTACT.y },
+    { t: B.missClick - 4, x: X_MISS.x, y: X_MISS.y },
+    { t: B.missClick + 8, x: X_MISS.x, y: X_MISS.y },
+    { t: B.hitClick - 4, x: X_HIT.x, y: X_HIT.y },
+    { t: B.popupGone + 2, x: X_HIT.x, y: X_HIT.y },
+    { t: B.linkClick - 4, x: linkX, y: LINK_Y },
+  ];
+};
 
 const Bar: React.FC<{ w: number; h?: number; c?: string; mt?: number }> = ({
   w,
@@ -52,6 +56,8 @@ const Bar: React.FC<{ w: number; h?: number; c?: string; mt?: number }> = ({
 export const BadSite: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const c = useCmp();
+  const fontFamily = c.fontFamily;
 
   // ---- label: big intro → small top chip -----------------------------------
   const bigLabelIn = spring({ frame: frame - 4, fps, config: SMOOTH });
@@ -88,7 +94,9 @@ export const BadSite: React.FC = () => {
       : 0;
 
   // ---- cursor ---------------------------------------------------------------
-  const pos = cursorPath(frame, PATH);
+  // The work link is right-aligned in RTL, left-aligned in LTR.
+  const linkX = c.rtl ? 845 : 240;
+  const pos = cursorPath(frame, buildPath(linkX));
   const shakeAmp =
     frame >= B.shakeStart && frame < B.shakeEnd
       ? 11 * (1 - (frame - B.shakeStart) / (B.shakeEnd - B.shakeStart))
@@ -132,11 +140,12 @@ export const BadSite: React.FC = () => {
               fontFamily,
               fontWeight: 800,
               fontSize: 76,
-              letterSpacing: "-0.03em",
+              letterSpacing: c.rtl ? undefined : "-0.03em",
+              lineHeight: c.rtl ? 1.4 : undefined,
               color: colors.text,
             }}
           >
-            People&apos;s website
+            {c.badLabel}
           </div>
           <div
             style={{
@@ -188,7 +197,7 @@ export const BadSite: React.FC = () => {
               boxShadow: "0 0 10px rgba(229,72,77,0.7)",
             }}
           />
-          People&apos;s website
+          {c.badLabel}
         </div>
       </div>
 
@@ -285,7 +294,7 @@ export const BadSite: React.FC = () => {
                   color: BAD.dim,
                 }}
               >
-                Page not found
+                {c.notFound}
               </div>
             </div>
           ) : (
@@ -310,7 +319,7 @@ export const BadSite: React.FC = () => {
                     transform: `scale(${1 + clickPulse(frame, B.adClick) * 0.04})`,
                   }}
                 >
-                  ★ HOT DEALS — CLICK NOW ★
+                  {c.hotDeals}
                 </div>
               )}
 
@@ -343,7 +352,7 @@ export const BadSite: React.FC = () => {
                       color: BAD.text,
                     }}
                   >
-                    Menu
+                    {c.menu}
                   </div>
                 </div>
 
@@ -392,7 +401,7 @@ export const BadSite: React.FC = () => {
                         color: "#FFFFFF",
                       }}
                     >
-                      Contact
+                      {c.contact}
                     </div>
 
                     {/* the fateful link */}
@@ -404,9 +413,11 @@ export const BadSite: React.FC = () => {
                         fontSize: 30,
                         color: BAD.uglyBlue,
                         textDecoration: "underline",
+                        direction: c.rtl ? "rtl" : "ltr",
+                        textAlign: c.rtl ? "right" : "left",
                       }}
                     >
-                      See our work →
+                      {c.seeWork}
                     </div>
                   </div>
                 )}
@@ -466,9 +477,10 @@ export const BadSite: React.FC = () => {
                         color: "#FFFFFF",
                         textShadow: "0 4px 0 rgba(0,0,0,0.25)",
                         transform: `rotate(-4deg)`,
+                        direction: c.rtl ? "rtl" : "ltr",
                       }}
                     >
-                      50% OFF!!!
+                      {c.off50}
                     </div>
                     <div
                       style={{
@@ -479,7 +491,7 @@ export const BadSite: React.FC = () => {
                         color: "#1B1E24",
                       }}
                     >
-                      LIMITED TIME ONLY
+                      {c.limited}
                     </div>
                     {/* the tiny ✕ */}
                     <div
@@ -517,7 +529,7 @@ export const BadSite: React.FC = () => {
       <Ripple x={CONTACT.x} y={CONTACT.y} clickFrame={B.click3} frame={frame} />
       <Ripple x={X_MISS.x} y={X_MISS.y} clickFrame={B.missClick} frame={frame} />
       <Ripple x={X_HIT.x} y={X_HIT.y} clickFrame={B.hitClick} frame={frame} />
-      <Ripple x={LINK.x} y={LINK.y} clickFrame={B.linkClick} frame={frame} />
+      <Ripple x={linkX} y={1288} clickFrame={B.linkClick} frame={frame} />
 
       {/* cursor */}
       {frame >= B.cursorIn && (
